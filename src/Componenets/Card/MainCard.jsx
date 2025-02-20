@@ -1,5 +1,5 @@
 // src/Components/MainCard/MainCard.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useCallback } from 'react';
 import { Card, CardActions, CardContent, Grid, IconButton } from '@mui/material';
 import CachedIcon from '@mui/icons-material/Cached';
 import { useTranslation } from 'react-i18next';
@@ -11,15 +11,16 @@ const MainCard = ({ language, mainMenuSelection }) => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [displayItems, setDisplayItems] = useState([]);
 
-  const getRandomItems = () => {
+  const getRandomItems = useCallback(() => {
     const shuffledItems = [...items].sort(() => 0.5 - Math.random());
     return shuffledItems.slice(0, 20);
-  };
-
+  }, [items]);
+  
   useEffect(() => {
     setItems(t('quotes', { returnObjects: true }));
     setDisplayItems(getRandomItems());
-  }, [t]);
+  }, [t, getRandomItems]);
+  
 
   useEffect(() => {
     if (language) {
