@@ -1,5 +1,4 @@
-// src/Components/MainCard/MainCard.js
-import React, { useState, useEffect,useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardActions, CardContent, Grid, IconButton } from '@mui/material';
 import CachedIcon from '@mui/icons-material/Cached';
 import { useTranslation } from 'react-i18next';
@@ -11,16 +10,22 @@ const MainCard = ({ language, mainMenuSelection }) => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [displayItems, setDisplayItems] = useState([]);
 
+  // Memoize the function to avoid recreation on every render
   const getRandomItems = useCallback(() => {
     const shuffledItems = [...items].sort(() => 0.5 - Math.random());
     return shuffledItems.slice(0, 20);
   }, [items]);
-  
+
+  // Set items when the translation changes
   useEffect(() => {
-    setItems(t('quotes', { returnObjects: true }));
+    const fetchedItems = t('quotes', { returnObjects: true });
+    setItems(fetchedItems);
+  }, [t]);
+
+  // Update displayItems only when items change
+  useEffect(() => {
     setDisplayItems(getRandomItems());
-  }, [t, getRandomItems]);
-  
+  }, [getRandomItems]);
 
   useEffect(() => {
     if (language) {
